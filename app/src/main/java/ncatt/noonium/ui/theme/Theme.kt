@@ -1,4 +1,4 @@
-package ncatt.noonium.Moonlight.ui.theme
+package ncatt.noonium.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -22,10 +22,25 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Pink40
 )
 
+/**
+ * Supported themes for the application.
+ */
 enum class Theme {
-    LIGHT, DARK, SYSTEM
+    /** Forced light theme. */
+    LIGHT,
+    /** Forced dark theme. */
+    DARK,
+    /** Follows the system's dark/light mode setting. */
+    SYSTEM
 }
 
+/**
+ * Main theme composable for the noonium application.
+ *
+ * @param theme The [Theme] to apply. Defaults to [Theme.SYSTEM].
+ * @param dynamicColor Whether to use dynamic color (Material You) on supported Android versions (API 31+).
+ * @param content The composable content to be themed.
+ */
 @Composable
 fun nooniumTheme(
     theme: Theme = Theme.SYSTEM,

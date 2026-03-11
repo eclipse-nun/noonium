@@ -1,10 +1,18 @@
 <resources>
     <string name="app_name">noonium</string>
     <string name="home">Home</string>
-    <string name="settings">Settings</string>
+    <string name="settings">Customization</string>
+    <string name="system_information">System information</string>
+    <string name="rom_information">ROM Information</string>
+    <string name="android_version">Android %1$s</string>
+    <string name="api_level">API %1$d</string>
+    <string name="system_version">System version</string>
+    <string name="rom_version">ROM version</string>
+    <string name="build_user">Build user</string>
+    <string name="kernel_version_label">Kernel version</string>
+
     <string name="device_information">Device information</string>
     <string name="device_name">Device name</string>
-    <string name="android_version">Android version</string>
     <string name="model">Model</string>
     <string name="manufacturer">Manufacturer</string>
     <string name="build_number">Build number</string>

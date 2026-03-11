@@ -1,10 +1,18 @@
 <resources>
     <string name="app_name">noonium</string>
     <string name="home">Trang chủ</string>
-    <string name="settings">Cài đặt</string>
+    <string name="settings">Tùy biến</string>
+    <string name="system_information">Thông tin hệ thống</string>
+    <string name="rom_information">Thông tin ROM</string>
+    <string name="android_version">Android %1$s</string>
+    <string name="api_level">API %1$d</string>
+    <string name="system_version">Phiên bản hệ thống</string>
+    <string name="rom_version">Phiên bản ROM</string>
+    <string name="build_user">Người build</string>
+    <string name="kernel_version_label">Phiên bản Kernel</string>
+
     <string name="device_information">Thông tin thiết bị</string>
     <string name="device_name">Tên thiết bị</string>
-    <string name="android_version">Phiên bản Android</string>
     <string name="model">Mẫu</string>
     <string name="manufacturer">Nhà sản xuất</string>
     <string name="build_number">Số bản dựng</string>

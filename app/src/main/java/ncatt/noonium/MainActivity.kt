@@ -1,14 +1,12 @@
 package ncatt.noonium
 
 import android.content.Context
-import android.content.Context.TELEPHONY_SERVICE
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.telephony.TelephonyManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -24,15 +22,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.ManageAccounts
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -54,13 +64,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ncatt.noonium.ui.theme.nooniumTheme
 import ncatt.noonium.ui.theme.Theme
-import java.io.File
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -108,110 +116,183 @@ fun nooniumApp(theme: MutableState<Theme>, language: MutableState<String>) {
             }
         }
     ) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            when (currentDestination) {
-                AppDestinations.HOME -> HomeScreen(modifier = Modifier.padding(innerPadding))
-                AppDestinations.SETTINGS -> SettingsScreen(modifier = Modifier.padding(innerPadding), theme, language)
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = MaterialTheme.colorScheme.background
+        ) { innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding)) {
+                when (currentDestination) {
+                    AppDestinations.HOME -> HomeScreen()
+                    AppDestinations.SETTINGS -> SettingsScreen(theme = theme, language = language)
+                }
             }
         }
     }
 }
 
 @Composable
-fun KernelStatus() {
-    val kernelVersion = System.getProperty("os.version") ?: "universe"
-
-    val (text, color, textColor) = when {
-        kernelVersion.contains("moonstone", ignoreCase = true) -> Triple("moonstone", Color.DarkGray, Color.White)
-        kernelVersion.contains("rc1-vigus", ignoreCase = true) -> Triple("vigus", Color.DarkGray, Color.White)
-        kernelVersion.contains("yuki", ignoreCase = true) -> Triple("yuki", Color.DarkGray, Color.White)
-        kernelVersion.contains("vampire", ignoreCase = true) -> Triple("vampire", Color.DarkGray, Color.White)
-        kernelVersion.contains("moonlight", ignoreCase = true) -> Triple("Moonlight", Color.DarkGray, Color.White)
-        kernelVersion.contains("helium", ignoreCase = true) -> Triple("h*", Color(0xFF42A5F5), Color.White)
-        kernelVersion.contains("experience", ignoreCase = true) -> Triple("exp", Color(0xFFFFCA28), Color.Black)
-        else -> Triple("universe", Color.DarkGray, Color.White)
-    }
-
-    Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(stringResource(id = R.string.kernel_status), fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color)
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
-            ) {
-                Text(text, color = textColor, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-            }
-        }
-    }
-}
-
-@Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val telephonyManager = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
-    val simProvider = telephonyManager.simOperatorName
-
+fun HomeScreen() {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .verticalScroll(rememberScrollState())
+            .padding(24.dp),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
-            text = "noonium",
-            style = MaterialTheme.typography.headlineMedium,
+            text = stringResource(id = R.string.home),
+            fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Left
+            color = MaterialTheme.colorScheme.onBackground
         )
-        KernelStatus()
-        Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = stringResource(id = R.string.device_information),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                DeviceInfoRow(stringResource(id = R.string.device_name), Build.DEVICE)
-                DeviceInfoRow(stringResource(id = R.string.android_version), "${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
-                DeviceInfoRow(stringResource(id = R.string.model), Build.MODEL)
-                DeviceInfoRow(stringResource(id = R.string.manufacturer), Build.MANUFACTURER)
-                DeviceInfoRow(stringResource(id = R.string.build_number), Build.DISPLAY)
-                DeviceInfoRow(stringResource(id = R.string.security_patch), Build.VERSION.SECURITY_PATCH)
-                DeviceInfoRow(stringResource(id = R.string.kernel_version), System.getProperty("os.version"))
-                DeviceInfoRow(stringResource(id = R.string.esim_provider), simProvider)
-                DeviceInfoRow(stringResource(id = R.string.fingerprint), Build.FINGERPRINT)
+        Text(
+            text = stringResource(id = R.string.system_information),
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Main info card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFE8EAF6)), // Light blueish/purple
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        ) {
+            Column {
+                // Top Header Section
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color(0xFFC5CAE9)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Outlined.GridView,
+                            contentDescription = null,
+                            tint = Color(0xFF3F51B5),
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.rom_information),
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "${Build.MANUFACTURER} ${Build.MODEL}",
+                            fontSize = 15.sp,
+                            color = Color.DarkGray
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.padding(start = 24.dp, bottom = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Outlined.History,
+                        contentDescription = null,
+                        tint = Color(0xFF1976D2),
+                        modifier = Modifier.size(22.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(id = R.string.android_version, Build.VERSION.RELEASE),
+                        color = Color(0xFF1976D2),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp
+                    )
+                    Text(
+                        text = "  |  ",
+                        color = Color(0xFF1976D2).copy(alpha = 0.4f),
+                        fontSize = 15.sp
+                    )
+                    Text(
+                        text = stringResource(id = R.string.api_level, Build.VERSION.SDK_INT),
+                        color = Color(0xFF1976D2),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp
+                    )
+                }
+
+                // Bottom List Section (White card part)
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(32.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                ) {
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        DeviceInfoItem(
+                            icon = Icons.Outlined.Verified,
+                            label = stringResource(id = R.string.system_version),
+                            value = Build.DISPLAY,
+                            iconColor = Color(0xFF2196F3)
+                        )
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp, horizontal = 56.dp), color = Color.LightGray.copy(alpha = 0.4f))
+                        DeviceInfoItem(
+                            icon = Icons.Outlined.History,
+                            label = stringResource(id = R.string.rom_version),
+                            value = Build.ID,
+                            iconColor = Color(0xFF7E57C2)
+                        )
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp, horizontal = 56.dp), color = Color.LightGray.copy(alpha = 0.4f))
+                        DeviceInfoItem(
+                            icon = Icons.Outlined.Person,
+                            label = stringResource(id = R.string.build_user),
+                            value = Build.USER,
+                            iconColor = Color(0xFF5C6BC0)
+                        )
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp, horizontal = 56.dp), color = Color.LightGray.copy(alpha = 0.4f))
+                        DeviceInfoItem(
+                            icon = Icons.Outlined.Code,
+                            label = stringResource(id = R.string.kernel_version_label),
+                            value = System.getProperty("os.version") ?: "unknown",
+                            iconColor = Color(0xFF9575CD)
+                        )
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun DeviceInfoRow(label: String, value: String?) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = label, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(end = 16.dp))
-        Text(text = value ?: "Unknown", color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.End)
-    }
-}
-
-@Composable
-fun ThemeName(theme: Theme): String {
-    return when (theme) {
-        Theme.LIGHT -> stringResource(id = R.string.theme_light)
-        Theme.DARK -> stringResource(id = R.string.theme_dark)
-        Theme.SYSTEM -> stringResource(id = R.string.theme_system)
+fun DeviceInfoItem(icon: ImageVector, label: String, value: String, iconColor: Color) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(44.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(iconColor.copy(alpha = 0.12f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icon, contentDescription = null, modifier = Modifier.size(22.dp), tint = iconColor)
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(text = label, fontSize = 13.sp, color = Color.Gray)
+            Text(text = value, fontSize = 17.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+        }
     }
 }
 
@@ -226,23 +307,26 @@ fun SettingsScreen(modifier: Modifier = Modifier, theme: MutableState<Theme>, la
 
     Column(modifier = modifier
         .fillMaxSize()
-        .padding(16.dp)) {
+        .padding(24.dp)) {
         Text(
             text = stringResource(id = R.string.settings),
-            style = MaterialTheme.typography.displayMedium,
+            fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(stringResource(id = R.string.theme), fontWeight = FontWeight.Bold)
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp)
+        ) {
+            Column(modifier = Modifier.padding(20.dp)) {
+                Text(stringResource(id = R.string.theme), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Box {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { themeExpanded = true }
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(ThemeName(theme.value), modifier = Modifier.weight(1f))
@@ -259,13 +343,13 @@ fun SettingsScreen(modifier: Modifier = Modifier, theme: MutableState<Theme>, la
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(stringResource(id = R.string.language), fontWeight = FontWeight.Bold)
+                Text(stringResource(id = R.string.language), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Box {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { languageExpanded = true }
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(if (language.value == "en") "English" else "Tiếng Việt", modifier = Modifier.weight(1f))
@@ -296,23 +380,33 @@ fun SettingsScreen(modifier: Modifier = Modifier, theme: MutableState<Theme>, la
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     context.startActivity(intent)
                 },
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            shape = RoundedCornerShape(24.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = "noonium", fontWeight = FontWeight.Bold)
-                Text(text = "ver. $versionName", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Column(modifier = Modifier.padding(20.dp)) {
+                Text(text = "noonium", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(text = "ver. $versionName", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f))
             }
         }
     }
 }
 
+@Composable
+fun ThemeName(theme: Theme): String {
+    return when (theme) {
+        Theme.LIGHT -> stringResource(id = R.string.theme_light)
+        Theme.DARK -> stringResource(id = R.string.theme_dark)
+        Theme.SYSTEM -> stringResource(id = R.string.theme_system)
+    }
+}
 
 enum class AppDestinations(
     @StringRes val label: Int,
     val icon: ImageVector,
 ) {
     HOME(R.string.home, Icons.Outlined.Home),
-    SETTINGS(R.string.settings, Icons.Outlined.Settings),
+    SETTINGS(R.string.settings, Icons.Outlined.ManageAccounts),
 }
 
 @Preview(showBackground = true)
@@ -320,15 +414,5 @@ enum class AppDestinations(
 fun HomeScreenPreview() {
     nooniumTheme {
         HomeScreen()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SettingsScreenPreview() {
-    val theme = remember { mutableStateOf(Theme.SYSTEM) }
-    val language = remember { mutableStateOf("en") }
-    nooniumTheme(theme = theme.value) {
-        SettingsScreen(theme = theme, language = language)
     }
 }
