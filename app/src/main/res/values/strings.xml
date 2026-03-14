@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">noonium</string>
     <string name="home">Home</string>
+    <string name="tweaks">Tweaks</string>
+    <string name="more">More</string>
     <string name="settings">Customization</string>
     <string name="system_information">System information</string>
     <string name="rom_information">ROM Information</string>
@@ -10,6 +12,19 @@
     <string name="rom_version">ROM version</string>
     <string name="build_user">Build user</string>
     <string name="kernel_version_label">Kernel version</string>
+
+    <string name="gpu_governor">GPU Governor</string>
+    <string name="overclock_cpu">Overclock CPU</string>
+    <string name="overclock_gpu">Overclock GPU</string>
+    <string name="revanced_youtube">Enable ReVanced for YouTube</string>
+    <string name="revanced_yt_music">Enable ReVanced for YT Music</string>
+
+    <string name="battery_info">Battery Information</string>
+    <string name="apps_count">Installed Apps</string>
+    <string name="display_chipset">Display &amp; Chipset</string>
+    <string name="device_name_label">Device Name</string>
+    <string name="uptime">Uptime</string>
+    <string name="deep_sleep">Deep Sleep</string>
 
     <string name="device_information">Device information</string>
     <string name="device_name">Device name</string>
