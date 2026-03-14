@@ -13,7 +13,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.StringRes
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -32,15 +31,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.outlined.Assignment
 import androidx.compose.material.icons.outlined.BatteryFull
 import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Devices
+import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.History
@@ -51,6 +54,7 @@ import androidx.compose.material.icons.outlined.Memory
 import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.PlayCircleOutline
+import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material.icons.outlined.Tune
@@ -149,7 +153,7 @@ fun HydrateApp(theme: MutableState<Theme>, language: MutableState<String>, isRoo
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            // New Custom Pill-Style Floating Navigation Bar
+            // Precise Floating Pill Navigation Bar matching user image
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,18 +162,18 @@ fun HydrateApp(theme: MutableState<Theme>, language: MutableState<String>, isRoo
             ) {
                 Surface(
                     shape = CircleShape,
-                    color = if (isDark) Color(0xFF1A1C1E).copy(alpha = 0.95f) else Color.White.copy(alpha = 0.95f),
-                    tonalElevation = 8.dp,
-                    shadowElevation = 12.dp,
+                    color = Color(0xFF121212), // Very dark background like the image
+                    tonalElevation = 0.dp,
+                    shadowElevation = 8.dp,
                     modifier = Modifier
-                        .padding(horizontal = 32.dp)
+                        .wrapContentWidth()
                         .wrapContentHeight()
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 8.dp)
+                            .padding(8.dp)
                             .animateContentSize(animationSpec = tween(durationMillis = 300)),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         AppDestinations.entries.forEach { destination ->
@@ -180,14 +184,14 @@ fun HydrateApp(theme: MutableState<Theme>, language: MutableState<String>, isRoo
                                     modifier = Modifier
                                         .clip(CircleShape)
                                         .background(
-                                            if (isSelected) MaterialTheme.colorScheme.primary 
+                                            if (isSelected) Color(0xFFC62828) // Deep Red like the image
                                             else Color.Transparent
                                         )
                                         .clickable(
                                             interactionSource = remember { MutableInteractionSource() },
                                             indication = null
                                         ) { currentDestination = destination }
-                                        .padding(horizontal = if (isSelected) 16.dp else 12.dp, vertical = 10.dp),
+                                        .padding(horizontal = if (isSelected) 20.dp else 12.dp, vertical = 12.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Row(
@@ -197,9 +201,9 @@ fun HydrateApp(theme: MutableState<Theme>, language: MutableState<String>, isRoo
                                         Icon(
                                             imageVector = destination.icon,
                                             contentDescription = stringResource(id = destination.label),
-                                            modifier = Modifier.size(24.dp),
+                                            modifier = Modifier.size(22.dp),
                                             tint = if (isSelected) Color.White 
-                                                   else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                                                   else Color(0xFF9E9E9E) // Grey for unselected
                                         )
                                         if (isSelected) {
                                             Spacer(modifier = Modifier.width(8.dp))
@@ -542,9 +546,9 @@ enum class AppDestinations(
     val requiresRoot: Boolean = false
 ) {
     HOME(R.string.home, Icons.Outlined.Home),
-    TWEAKS(R.string.tweaks, Icons.Outlined.Tune, requiresRoot = true),
-    MORE(R.string.more, Icons.Outlined.MoreHoriz),
-    SETTINGS(R.string.settings, Icons.Outlined.ManageAccounts),
+    TWEAKS(R.string.tweaks, Icons.Outlined.Extension, requiresRoot = true),
+    MORE(R.string.more, Icons.Outlined.Shield),
+    SETTINGS(R.string.settings, Icons.Outlined.Assignment),
 }
 
 @Preview(showBackground = true)
