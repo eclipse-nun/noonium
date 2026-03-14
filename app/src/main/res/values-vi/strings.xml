@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">noonium</string>
     <string name="home">Trang chủ</string>
+    <string name="tweaks">Tinh chỉnh</string>
+    <string name="more">Thêm</string>
     <string name="settings">Tùy biến</string>
     <string name="system_information">Thông tin hệ thống</string>
     <string name="rom_information">Thông tin ROM</string>
@@ -10,6 +12,19 @@
     <string name="rom_version">Phiên bản ROM</string>
     <string name="build_user">Người build</string>
     <string name="kernel_version_label">Phiên bản Kernel</string>
+
+    <string name="gpu_governor">Trình điều phối GPU (Governor)</string>
+    <string name="overclock_cpu">Ép xung CPU</string>
+    <string name="overclock_gpu">Ép xung GPU</string>
+    <string name="revanced_youtube">Bật ReVanced cho YouTube</string>
+    <string name="revanced_yt_music">Bật ReVanced cho YT Music</string>
+
+    <string name="battery_info">Thông tin Pin</string>
+    <string name="apps_count">Ứng dụng đã cài đặt</string>
+    <string name="display_chipset">Màn hình &amp; Chipset</string>
+    <string name="device_name_label">Tên thiết bị</string>
+    <string name="uptime">Thời gian hoạt động</string>
+    <string name="deep_sleep">Ngủ sâu (Deep Sleep)</string>
 
     <string name="device_information">Thông tin thiết bị</string>
     <string name="device_name">Tên thiết bị</string>
